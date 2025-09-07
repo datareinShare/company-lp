@@ -104,6 +104,18 @@ mark { background: #fef08a; padding: 0 .15em; border-radius: .2em; }
 .company-card.lifestyle{border-left-color: #fb7185; background: linear-gradient(135deg, rgba(251, 113, 133, 0.1), rgba(255, 255, 255, 0.95)); }
 .company-card.medical { border-left-color: #f472b6; background: linear-gradient(135deg, rgba(244, 114, 182, 0.1), rgba(255, 255, 255, 0.95)); }
 
+/* 追加カテゴリの見た目クラス */
+.company-card.end      { border-left-color: #78716c; background: linear-gradient(135deg, rgba(120, 113, 108, 0.1), rgba(255,255,255,0.95)); }
+.company-card.asset    { border-left-color: #10b981; background: linear-gradient(135deg, rgba(16, 185, 129, 0.1), rgba(255,255,255,0.95)); }
+.company-card.finance  { border-left-color: #06b6d4; background: linear-gradient(135deg, rgba(6, 182, 212, 0.1), rgba(255,255,255,0.95)); }
+.company-card.estate   { border-left-color: #84cc16; background: linear-gradient(135deg, rgba(132, 204, 22, 0.1), rgba(255,255,255,0.95)); }
+.company-card.legal    { border-left-color: #3b82f6; background: linear-gradient(135deg, rgba(59, 130, 246, 0.1), rgba(255,255,255,0.95)); }
+.company-card.judge    { border-left-color: #6366f1; background: linear-gradient(135deg, rgba(99, 102, 241, 0.1), rgba(255,255,255,0.95)); }
+.company-card.consultant{border-left-color: #16a34a; background: linear-gradient(135deg, rgba(22, 163, 74, 0.1), rgba(255,255,255,0.95)); }
+.company-card.prevention{border-left-color: #f43f5e; background: linear-gradient(135deg, rgba(244, 63, 94, 0.1), rgba(255,255,255,0.95)); }
+.company-card.travel   { border-left-color: #0ea5e9; background: linear-gradient(135deg, rgba(14, 165, 233, 0.1), rgba(255,255,255,0.95)); }
+.company-card.others   { border-left-color: #94a3b8; background: linear-gradient(135deg, rgba(148, 163, 184, 0.1), rgba(255,255,255,0.95)); }
+
 .company-name { font-size: 1.5rem; font-weight: bold; color: #ea580c; margin-bottom: 10px; }
 .company-message { color: #92400e; margin-bottom: 15px; line-height: 1.7; }
 .company-link { display: inline-block; background: linear-gradient(45deg, #f97316, #ea580c); color: white; padding: 10px 20px; text-decoration: none; border-radius: 25px; transition: all 0.3s ease; font-weight: bold; }
