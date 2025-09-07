@@ -1,16 +1,5 @@
-// ==== EmailJS 設定（ここをあなたの値に変更）====
-const EMAILJS_PUBLIC_KEY = 'YOUR_PUBLIC_KEY';
-const EMAILJS_SERVICE_ID = 'YOUR_SERVICE_ID';
-const EMAILJS_TEMPLATE_ID = 'YOUR_TEMPLATE_ID';
-// 送信先メールアドレス（指定のアドレスに変更）
-const DEST_EMAIL = 'destination@example.com';
-
-// 初期化（キーが設定された場合のみ）
-window.addEventListener('DOMContentLoaded', () => {
-  if (window.emailjs && EMAILJS_PUBLIC_KEY !== 'YOUR_PUBLIC_KEY') {
-    emailjs.init({ publicKey: EMAILJS_PUBLIC_KEY });
-  }
-});
+// ==== 送信先（GAS Webアプリ） ====
+const GAS_ENDPOINT = 'https://script.google.com/macros/s/AKfycbwyXSNCyD6KPtvdcPvUeZitfyE9rrgu6IwWVnW8RKmCUv-dk0InbP2KmS4mZZjvdUU6iA/exec';
 
 // ユーティリティ: デバウンス
 function debounce(fn, delay = 200) {
@@ -111,7 +100,7 @@ document.addEventListener('DOMContentLoaded', function() {
   // 初期表示
   applyFilters();
 
-  // 既存：フォーム送信処理（EmailJS）
+  // フォーム送信処理（GAS WebアプリへPOST）
   const contactForm = document.getElementById('contactForm');
   if (contactForm) {
     contactForm.addEventListener('submit', async function(e) {
@@ -128,29 +117,47 @@ document.addEventListener('DOMContentLoaded', function() {
       const statusEl = document.getElementById('formStatus');
       const originalText = submitBtn.textContent;
       submitBtn.disabled = true; submitBtn.textContent = '送信中…';
+      if (statusEl) { statusEl.classList.remove('show', 'error'); statusEl.textContent = ''; }
 
-      const params = {
-        to_email: DEST_EMAIL,
-        company_name: data.companyName,
+      // GAS 側が受け取るパラメータ名にマッピング
+      const payload = new URLSearchParams({
+        subject: 'LP掲載申込み',
+        name: data.companyName,
         category: data.category,
         message: data.message,
-        lp_url: data.lpUrl,
-        contact_name: data.contactName,
-        email: data.email,
-        phone: data.phone || '',
-        additional_info: data.additionalInfo || ''
-      };
+        lpUrl: data.lpUrl,
+        managerName: data.contactName,
+        emailaddressFrom: data.email,
+        phoneNumber: data.phone || '',
+        others: data.additionalInfo || ''
+      });
 
       try {
-        if (!window.emailjs) throw new Error('EmailJS not loaded');
-        if (EMAILJS_PUBLIC_KEY === 'YOUR_PUBLIC_KEY') throw new Error('EmailJS keys not set');
-        const result = await emailjs.send(EMAILJS_SERVICE_ID, EMAILJS_TEMPLATE_ID, params);
-        console.log('EmailJS result:', result);
-        statusEl.textContent = '送信が完了しました。担当者宛にメールをお届けしました。';
+        const res = await fetch(GAS_ENDPOINT, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/x-www-form-urlencoded;charset=UTF-8' },
+          body: payload.toString()
+        });
+        let ok = res.ok;
+        let json = null;
+        try { json = await res.json(); if (json && typeof json.ok !== 'undefined') ok = json.ok; } catch (_) {}
+
+        if (!ok) throw new Error(`Request failed: ${res.status}`);
+
+        if (statusEl) {
+          statusEl.textContent = '送信が完了しました。担当者宛にメールをお届けしました。';
+          statusEl.classList.remove('error');
+          statusEl.classList.add('show');
+        }
         contactForm.reset();
       } catch (err) {
         console.error('送信エラー:', err);
-        alert('送信に失敗しました。時間をおいて再度お試しください。');
+        if (statusEl) {
+          statusEl.textContent = '送信に失敗しました。時間をおいて再度お試しください。';
+          statusEl.classList.add('show', 'error');
+        } else {
+          alert('送信に失敗しました。時間をおいて再度お試しください。');
+        }
       } finally {
         submitBtn.disabled = false; submitBtn.textContent = originalText;
       }

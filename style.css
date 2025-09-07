@@ -126,6 +126,24 @@ mark { background: #fef08a; padding: 0 .15em; border-radius: .2em; }
 .hidden { display: none; }
 .price-info { display: none; }
 
+/* 送信ステータス表示 */
+.form-status {
+    margin-top: 12px;
+    font-size: .95rem;
+    color: #065f46; /* success text */
+    background: #ecfdf5; /* success bg */
+    border: 1px solid #a7f3d0; /* success border */
+    padding: 10px 12px;
+    border-radius: 10px;
+    display: none;
+}
+.form-status.show { display: block; }
+.form-status.error {
+    color: #7f1d1d;
+    background: #fef2f2;
+    border-color: #fecaca;
+}
+
 @media (max-width: 768px) {
     .container { padding: 10px; }
     h1 { font-size: 2rem; }
