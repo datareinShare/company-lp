@@ -1,5 +1,25 @@
 // ==== 送信先（GAS Webアプリ） ====
-const GAS_ENDPOINT = 'https://script.google.com/macros/s/AKfycbwyXSNCyD6KPtvdcPvUeZitfyE9rrgu6IwWVnW8RKmCUv-dk0InbP2KmS4mZZjvdUU6iA/exec';
+const GAS_ENDPOINT = 'https://script.google.com/macros/s/AKfycbxBVnwaQ4ue_qh0-dLw1tQyneVxfOk7E4FsnsQcXukkPuwkM8kpI9nsOdBfBhEm0UvLTw/exec';
+const GAS_LIST_ENDPOINT = GAS_ENDPOINT; // GET: 企業一覧, POST: 問い合わせ
+
+// カテゴリ→見た目クラスの対応（style.cssに準拠）
+const CATEGORY_TO_CLASS = {
+  '健康情報': 'health',
+  '食育情報': 'food',
+  '運動情報': 'exercise',
+  '美容情報': 'beauty',
+  '終活情報': 'end',
+  '財産管理情報': 'asset',
+  '保険・ファイナンシャルプランナー情報': 'finance',
+  '不動産情報': 'estate',
+  '弁護士情報': 'legal',
+  '司法書士情報': 'judge',
+  '社労士情報': 'consultant',
+  'メンタルヘルス': 'mental',
+  '防犯情報': 'prevention',
+  '旅行・観光情報': 'travel',
+  'その他': 'others'
+};
 
 // ユーティリティ: デバウンス
 function debounce(fn, delay = 200) {
@@ -12,20 +32,99 @@ function escapeRegExp(s){ return s.replace(/[.*+?^${}()|[\]\\]/g, '\\$&'); }
 // メイン処理
 document.addEventListener('DOMContentLoaded', function() {
   const tabButtons = document.querySelectorAll('.tab-button');
-  const companyCards = document.querySelectorAll('.company-card');
+  const companiesGrid = document.getElementById('companiesGrid');
   const searchInput = document.getElementById('freeword');
   const clearBtn = document.getElementById('clearSearch');
   const resultCount = document.getElementById('resultCount');
 
+  let companyCards = document.querySelectorAll('.company-card');
+
   let activeCategory = 'all';
 
-  // 元テキストを保存（ハイライト解除用）
-  companyCards.forEach(card => {
+  // カード描画
+  function mapCategoryToClass(cat){ return CATEGORY_TO_CLASS[cat] || 'others'; }
+
+  function createCompanyCard(item){
+    const styleClass = (item.styleClass && String(item.styleClass).trim()) || mapCategoryToClass(item.category);
+    const url = (item.url && String(item.url).trim()) || '#';
+    const card = document.createElement('div');
+    card.className = `company-card ${styleClass}`;
+    card.setAttribute('data-category', item.category || 'その他');
+    card.innerHTML = `
+      <h3 class="company-name"></h3>
+      <p class="company-message"></p>
+      <a href="${url}" class="company-link" target="_blank" rel="noopener">詳細を見る →</a>
+    `;
     const nameEl = card.querySelector('.company-name');
     const msgEl = card.querySelector('.company-message');
+    nameEl.textContent = item.name || '';
+    msgEl.textContent = item.message || '';
+    // ハイライト解除用の元テキスト保存
     nameEl.dataset.original = nameEl.textContent;
     msgEl.dataset.original = msgEl.textContent;
-  });
+    return card;
+  }
+
+  function renderCompanies(rows){
+    companiesGrid.innerHTML = '';
+    rows.forEach(item => { companiesGrid.appendChild(createCompanyCard(item)); });
+    companyCards = companiesGrid.querySelectorAll('.company-card');
+    applyFilters();
+  }
+
+  async function loadCompanies(){
+    // まずは通常のfetch（CORS許可環境で成功）
+    try {
+      const res = await fetch(`${GAS_LIST_ENDPOINT}?activeOnly=true`, { method: 'GET' });
+      const json = await res.json();
+      if (!json || json.ok !== true) throw new Error('Invalid response');
+      const rows = Array.isArray(json.rows) ? json.rows : [];
+      renderCompanies(rows);
+      return;
+    } catch (err) {
+      console.warn('fetch失敗。JSONPフォールバックを試行します:', err);
+    }
+
+    // CORS回避：JSONPフォールバック
+    await new Promise((resolve) => {
+      const cbName = `companiesCallback_${Date.now()}`;
+      const script = document.createElement('script');
+      const url = `${GAS_LIST_ENDPOINT}?activeOnly=true&callback=${cbName}&t=${Date.now()}`;
+      let done = false;
+      window[cbName] = (json) => {
+        done = true;
+        try {
+          if (json && json.ok === true && Array.isArray(json.rows)) {
+            renderCompanies(json.rows);
+          } else {
+            throw new Error('Invalid JSONP response');
+          }
+        } catch (e) {
+          console.error('JSONP処理エラー:', e);
+          companiesGrid.innerHTML = '<p>企業情報の読み込みに失敗しました。時間をおいて再度お試しください。</p>';
+          resultCount.textContent = '';
+        } finally {
+          cleanup();
+          resolve();
+        }
+      };
+      function cleanup(){
+        try { delete window[cbName]; } catch(_) { window[cbName] = undefined; }
+        if (script && script.parentNode) script.parentNode.removeChild(script);
+      }
+      script.src = url;
+      script.onerror = () => {
+        if (!done) {
+          console.error('JSONPスクリプトの読み込みに失敗');
+          companiesGrid.innerHTML = '<p>企業情報の読み込みに失敗しました。時間をおいて再度お試しください。</p>';
+          resultCount.textContent = '';
+          cleanup();
+          resolve();
+        }
+      };
+      document.head.appendChild(script);
+    });
+  }
 
   function highlightMatches(card, tokens){
     const nameEl = card.querySelector('.company-name');
@@ -97,8 +196,8 @@ document.addEventListener('DOMContentLoaded', function() {
   // クリアボタン
   if (clearBtn) clearBtn.addEventListener('click', () => { searchInput.value = ''; applyFilters(); searchInput.focus(); });
 
-  // 初期表示
-  applyFilters();
+  // 初期表示（企業一覧を取得してからフィルタ適用）
+  loadCompanies();
 
   // フォーム送信処理（GAS WebアプリへPOST）
   const contactForm = document.getElementById('contactForm');
@@ -164,11 +263,5 @@ document.addEventListener('DOMContentLoaded', function() {
     });
   }
 
-  // 既存：リンククリック時（デモ用）
-  document.querySelectorAll('.company-link').forEach(link => {
-    link.addEventListener('click', function(e) {
-      e.preventDefault();
-      alert('実際のサービスでは、こちらから企業のLPページに遷移します。');
-    });
-  });
+  // 企業リンクはそのまま遷移（target=_blank）。特別なハンドラは不要。
 });
