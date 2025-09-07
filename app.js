@@ -1,5 +1,6 @@
 // ==== 送信先（GAS Webアプリ） ====
-const GAS_ENDPOINT = 'https://script.google.com/macros/s/AKfycbxBVnwaQ4ue_qh0-dLw1tQyneVxfOk7E4FsnsQcXukkPuwkM8kpI9nsOdBfBhEm0UvLTw/exec';
+const APP_CONFIG = window.APP_CONFIG || {};
+const GAS_ENDPOINT = (APP_CONFIG.GAS_ENDPOINT || '').trim();
 const GAS_LIST_ENDPOINT = GAS_ENDPOINT; // GET: 企業一覧, POST: 問い合わせ
 
 // カテゴリ→見た目クラスの対応（style.cssに準拠）
@@ -73,6 +74,11 @@ document.addEventListener('DOMContentLoaded', function() {
   }
 
   async function loadCompanies(){
+    if (!GAS_LIST_ENDPOINT) {
+      companiesGrid.innerHTML = '<p>設定が未完了です。config.js に GAS_ENDPOINT を設定してください。</p>';
+      resultCount.textContent = '';
+      return;
+    }
     // まずは通常のfetch（CORS許可環境で成功）
     try {
       const res = await fetch(`${GAS_LIST_ENDPOINT}?activeOnly=true`, { method: 'GET' });
@@ -232,6 +238,7 @@ document.addEventListener('DOMContentLoaded', function() {
       });
 
       try {
+        if (!GAS_ENDPOINT) throw new Error('GAS_ENDPOINT not configured');
         const res = await fetch(GAS_ENDPOINT, {
           method: 'POST',
           headers: { 'Content-Type': 'application/x-www-form-urlencoded;charset=UTF-8' },
