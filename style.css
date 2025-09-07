@@ -1,0 +1,136 @@
+/* 文字サイズの全体スケール（高齢者向けに読みやすく） */
+:root { --base-font: clamp(18px, 1.2vw + 14px, 20px); }
+html { font-size: var(--base-font); }
+
+* { margin: 0; padding: 0; box-sizing: border-box; }
+
+body {
+    font-family: 'Hiragino Sans', 'ヒラギノ角ゴシック', 'Yu Gothic', 'YuGothic', sans-serif;
+    line-height: 1.75;
+    color: #333;
+    background: linear-gradient(135deg, #fff7ed 0%, #fef3c7 30%, #fde68a 60%, #fed7aa 100%);
+    min-height: 100vh;
+}
+
+.container { max-width: 1200px; margin: 0 auto; padding: 20px; }
+
+header {
+    text-align: center;
+    margin-bottom: 20px;
+    background: rgba(255, 255, 255, 0.95);
+    padding: 30px;
+    border-radius: 20px;
+    box-shadow: 0 4px 20px rgba(251, 146, 60, 0.15);
+    border: 2px solid #fed7aa;
+    backdrop-filter: blur(10px);
+}
+
+h1 {
+    color: #ea580c;
+    font-size: 2.5rem;
+    margin-bottom: 10px;
+    background: linear-gradient(45deg, #f97316, #ea580c, #d97706);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    text-shadow: 0 2px 4px rgba(234, 88, 12, 0.3);
+}
+
+.subtitle { color: #92400e; font-size: 1.1rem; }
+
+.category-tabs {
+    display: flex; justify-content: center; gap: 15px; margin: 25px 0 15px; flex-wrap: wrap;
+}
+
+.tab-button {
+    background: rgba(255, 255, 255, 0.9);
+    border: 2px solid #fed7aa;
+    padding: 12px 20px;
+    border-radius: 25px;
+    cursor: pointer; font-size: 1rem; font-weight: bold; color: #ea580c;
+    transition: all 0.3s ease; box-shadow: 0 4px 15px rgba(251, 146, 60, 0.15); backdrop-filter: blur(5px);
+}
+.tab-button:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 6px 20px rgba(251, 146, 60, 0.25);
+    border-color: #fb923c; background: rgba(255, 255, 255, 1);
+}
+.tab-button.active {
+    background: linear-gradient(45deg, #f97316, #ea580c);
+    color: white; border-color: #ea580c; box-shadow: 0 6px 20px rgba(251, 146, 60, 0.4);
+}
+
+/* ▼ 追加: フリーワード検索 UI */
+.search-bar {
+    display: grid; grid-template-columns: 1fr auto; gap: 10px; align-items: center;
+    margin: 15px auto 25px; max-width: 900px;
+    background: rgba(255,255,255,0.9); border: 2px solid #fed7aa; padding: 12px; border-radius: 16px;
+    box-shadow: 0 4px 15px rgba(251, 146, 60, 0.12);
+}
+.search-input {
+    width: 100%; padding: 12px 14px; border: 2px solid #fed7aa; border-radius: 10px; font-size: 1rem;
+    transition: border-color 0.2s ease; background: rgba(255,255,255,0.95);
+}
+.search-input:focus { outline: none; border-color: #f97316; box-shadow: 0 0 0 3px rgba(249, 115, 22, 0.15); background: #fff; }
+.clear-btn {
+    background: linear-gradient(45deg, #f97316, #ea580c); color: #fff; border: none; padding: 10px 16px;
+    border-radius: 12px; font-weight: bold; cursor: pointer; transition: transform .2s ease, box-shadow .2s ease;
+}
+.clear-btn:hover { transform: translateY(-1px); box-shadow: 0 4px 16px rgba(251,146,60,.35); }
+
+.search-hint {
+    grid-column: 1 / -1; font-size: .9rem; color: #92400e; margin-top: 4px;
+}
+.result-row { grid-column: 1 / -1; display: flex; justify-content: space-between; align-items: center; }
+.result-count { font-size: .95rem; color: #92400e; }
+
+mark { background: #fef08a; padding: 0 .15em; border-radius: .2em; }
+.visually-hidden { position: absolute !important; height: 1px; width: 1px; overflow: hidden; clip: rect(1px, 1px, 1px, 1px); white-space: nowrap; }
+/* ▲ 追加ここまで */
+
+.companies-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(350px, 1fr)); gap: 25px; margin-bottom: 50px; }
+
+.company-card {
+    background: rgba(255, 255, 255, 0.95); padding: 25px; border-radius: 15px;
+    box-shadow: 0 4px 20px rgba(251, 146, 60, 0.12); transition: all 0.3s ease;
+    border-left: 5px solid; border: 1px solid #fed7aa; backdrop-filter: blur(5px);
+}
+.company-card:hover { transform: translateY(-3px); box-shadow: 0 8px 30px rgba(251, 146, 60, 0.2); background: rgba(255, 255, 255, 1); }
+
+.company-card.health  { border-left-color: #f97316; background: linear-gradient(135deg, rgba(249, 115, 22, 0.1), rgba(255, 255, 255, 0.95)); }
+.company-card.exercise{ border-left-color: #f59e0b; background: linear-gradient(135deg, rgba(245, 158, 11, 0.1), rgba(255, 255, 255, 0.95)); }
+.company-card.food    { border-left-color: #fbbf24; background: linear-gradient(135deg, rgba(251, 191, 36, 0.1), rgba(255, 255, 255, 0.95)); }
+.company-card.beauty  { border-left-color: #ec4899; background: linear-gradient(135deg, rgba(236, 72, 153, 0.1), rgba(255, 255, 255, 0.95)); }
+.company-card.mental  { border-left-color: #a855f7; background: linear-gradient(135deg, rgba(168, 85, 247, 0.1), rgba(255, 255, 255, 0.95)); }
+.company-card.lifestyle{border-left-color: #fb7185; background: linear-gradient(135deg, rgba(251, 113, 133, 0.1), rgba(255, 255, 255, 0.95)); }
+.company-card.medical { border-left-color: #f472b6; background: linear-gradient(135deg, rgba(244, 114, 182, 0.1), rgba(255, 255, 255, 0.95)); }
+
+.company-name { font-size: 1.5rem; font-weight: bold; color: #ea580c; margin-bottom: 10px; }
+.company-message { color: #92400e; margin-bottom: 15px; line-height: 1.7; }
+.company-link { display: inline-block; background: linear-gradient(45deg, #f97316, #ea580c); color: white; padding: 10px 20px; text-decoration: none; border-radius: 25px; transition: all 0.3s ease; font-weight: bold; }
+.company-link:hover { transform: scale(1.05); box-shadow: 0 5px 20px rgba(251, 146, 60, 0.4); background: linear-gradient(45deg, #ea580c, #d97706); }
+
+.contact-section { background: rgba(255, 255, 255, 0.95); padding: 40px; border-radius: 20px; box-shadow: 0 4px 20px rgba(251, 146, 60, 0.15); border: 2px solid #fed7aa; backdrop-filter: blur(10px); }
+.contact-title { text-align: center; font-size: 2rem; color: #ea580c; margin-bottom: 30px; }
+
+.form-group { margin-bottom: 25px; }
+.form-group label { display: block; margin-bottom: 8px; font-weight: bold; color: #ea580c; }
+.form-group input, .form-group select, .form-group textarea {
+    width: 100%; padding: 15px; border: 2px solid #fed7aa; border-radius: 10px; font-size: 1rem; transition: border-color 0.3s ease; background: rgba(255, 255, 255, 0.9);
+}
+.form-group input:focus, .form-group select:focus, .form-group textarea:focus {
+    outline: none; border-color: #f97316; box-shadow: 0 0 0 3px rgba(249, 115, 22, 0.15); background: rgba(255, 255, 255, 1);
+}
+.submit-btn { background: linear-gradient(45deg, #f97316, #ea580c); color: white; border: none; padding: 15px 30px; border-radius: 25px; font-size: 1.1rem; cursor: pointer; transition: all 0.3s ease; width: 100%; }
+.submit-btn:hover { transform: translateY(-2px); background: linear-gradient(45deg, #ea580c, #d97706); box-shadow: 0 8px 25px rgba(251, 146, 60, 0.4); }
+
+.hidden { display: none; }
+.price-info { display: none; }
+
+@media (max-width: 768px) {
+    .container { padding: 10px; }
+    h1 { font-size: 2rem; }
+    .category-tabs { flex-direction: column; align-items: center; }
+    .companies-grid { grid-template-columns: 1fr; }
+    .search-bar { grid-template-columns: 1fr; }
+    .result-row { flex-direction: column; gap: 6px; align-items: flex-start; }
+}

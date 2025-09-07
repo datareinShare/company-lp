@@ -1,0 +1,192 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>企業LP紹介サイト - 健康・運動・食のパートナー企業</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>健康情報</h1>
+            <p class="subtitle">あなたの健康をサポートする企業・サービスをご紹介</p>
+        </header>
+
+        <div class="category-tabs" aria-label="カテゴリ選択">
+            <button class="tab-button active" data-category="all">すべて</button>
+            <button class="tab-button" data-category="health">健康管理</button>
+            <button class="tab-button" data-category="exercise">運動・フィットネス</button>
+            <button class="tab-button" data-category="food">栄養・食事</button>
+            <button class="tab-button" data-category="beauty">美容・スキンケア</button>
+            <button class="tab-button" data-category="mental">メンタルヘルス</button>
+            <button class="tab-button" data-category="lifestyle">ライフスタイル</button>
+            <button class="tab-button" data-category="medical">医療・治療</button>
+        </div>
+
+        <!-- ▼ 追加: フリーワード検索欄 -->
+        <div class="search-bar" role="search" aria-label="フリーワード検索">
+            <label for="freeword" class="visually-hidden">フリーワード検索</label>
+            <input id="freeword" class="search-input" type="search" placeholder="キーワードで絞り込み（例：ヨガ, 有機, クリニック） 空白でAND検索" autocomplete="off">
+            <button id="clearSearch" type="button" class="clear-btn" aria-label="検索条件をクリア">クリア</button>
+            <div class="result-row">
+                <div id="resultCount" class="result-count" aria-live="polite"></div>
+                <div class="search-hint">企業名・紹介文が対象／空白で区切ると <strong>AND</strong> で絞り込み</div>
+            </div>
+        </div>
+        <!-- ▲ 追加ここまで -->
+
+        <div class="companies-grid" id="companiesGrid">
+            <!-- 健康管理カテゴリ -->
+            <div class="company-card health" data-category="health">
+                <h3 class="company-name">健康ライフ株式会社</h3>
+                <p class="company-message">毎日の健康を支える、自然由来のサプリメントをお届けします。創業20年の実績と信頼で、あなたの健康的な生活をサポートいたします。</p>
+                <a href="#" class="company-link">詳細を見る →</a>
+            </div>
+
+            <div class="company-card health" data-category="health">
+                <h3 class="company-name">ウェルネスクリニック</h3>
+                <p class="company-message">予防医学を重視した総合的な健康管理サービス。最新の検査設備と専門医による丁寧な診察で、皆様の健康をお守りします。</p>
+                <a href="#" class="company-link">詳細を見る →</a>
+            </div>
+
+            <!-- 運動・フィットネスカテゴリ -->
+            <div class="company-card exercise" data-category="exercise">
+                <h3 class="company-name">フィットネス24</h3>
+                <p class="company-message">24時間営業のプレミアムジム。最新マシンと経験豊富なトレーナーがあなたの理想の体づくりを全力でサポートします。</p>
+                <a href="#" class="company-link">詳細を見る →</a>
+            </div>
+
+            <div class="company-card exercise" data-category="exercise">
+                <h3 class="company-name">ヨガスタジオ和</h3>
+                <p class="company-message">心と体のバランスを整える本格的なヨガスタジオ。初心者から上級者まで、一人ひとりに合わせた丁寧な指導を行います。</p>
+                <a href="#" class="company-link">詳細を見る →</a>
+            </div>
+
+            <!-- 栄養・食事カテゴリ -->
+            <div class="company-card food" data-category="food">
+                <h3 class="company-name">オーガニックファーム</h3>
+                <p class="company-message">無農薬・有機栽培にこだわった新鮮な野菜を産地直送。家族の健康を考えた、安心・安全な食材をお届けします。</p>
+                <a href="#" class="company-link">詳細を見る →</a>
+            </div>
+
+            <div class="company-card food" data-category="food">
+                <h3 class="company-name">健康食品研究所</h3>
+                <p class="company-message">管理栄養士監修の機能性食品を開発・製造。科学的根拠に基づいた栄養補助食品で、現代人の食生活をサポートします。</p>
+                <a href="#" class="company-link">詳細を見る →</a>
+            </div>
+
+            <!-- 美容・スキンケアカテゴリ -->
+            <div class="company-card beauty" data-category="beauty">
+                <h3 class="company-name">ナチュラルビューティー</h3>
+                <p class="company-message">天然成分100%のスキンケア製品。敏感肌の方にも安心してお使いいただける、優しく効果的な美容アイテムをご提供します。</p>
+                <a href="#" class="company-link">詳細を見る →</a>
+            </div>
+
+            <div class="company-card beauty" data-category="beauty">
+                <h3 class="company-name">エステティックサロン麗</h3>
+                <p class="company-message">最新の美容技術と熟練のエステティシャンによる本格的なフェイシャル・ボディケア。内側から輝く美しさをサポートします。</p>
+                <a href="#" class="company-link">詳細を見る →</a>
+            </div>
+
+            <!-- メンタルヘルスカテゴリ -->
+            <div class="company-card mental" data-category="mental">
+                <h3 class="company-name">マインドケアセンター</h3>
+                <p class="company-message">ストレス社会で戦う現代人のメンタルヘルスをサポート。カウンセリングから瞑想指導まで、心の健康を総合的にケアします。</p>
+                <a href="#" class="company-link">詳細を見る →</a>
+            </div>
+
+            <div class="company-card mental" data-category="mental">
+                <h3 class="company-name">リラクゼーションスタジオ</h3>
+                <p class="company-message">忙しい日常から解放される癒しの空間。アロマテラピーと音楽療法で心身ともにリフレッシュできる特別な時間を提供します。</p>
+                <a href="#" class="company-link">詳細を見る →</a>
+            </div>
+
+            <!-- ライフスタイルカテゴリ -->
+            <div class="company-card lifestyle" data-category="lifestyle">
+                <h3 class="company-name">ヘルシーライフスタイル</h3>
+                <p class="company-message">健康的な生活習慣をトータルでサポート。睡眠、食事、運動のバランスを整え、質の高いライフスタイルを実現します。</p>
+                <a href="#" class="company-link">詳細を見る →</a>
+            </div>
+
+            <div class="company-card lifestyle" data-category="lifestyle">
+                <h3 class="company-name">ウェルネスコンサルティング</h3>
+                <p class="company-message">個人の健康状態に合わせたオーダーメイドの健康プログラム。専門家による継続的なサポートで理想の健康状態を目指します。</p>
+                <a href="#" class="company-link">詳細を見る →</a>
+            </div>
+
+            <!-- 医療・治療カテゴリ -->
+            <div class="company-card medical" data-category="medical">
+                <h3 class="company-name">統合医療クリニック</h3>
+                <p class="company-message">西洋医学と東洋医学を融合した統合的なアプローチ。患者様一人ひとりに最適な治療法をご提案し、根本からの健康回復を支援します。</p>
+                <a href="#" class="company-link">詳細を見る →</a>
+            </div>
+
+            <div class="company-card medical" data-category="medical">
+                <h3 class="company-name">在宅医療サポート</h3>
+                <p class="company-message">自宅で安心して医療を受けられる在宅医療サービス。24時間体制のサポートで、患者様とご家族の安心をお守りします。</p>
+                <a href="#" class="company-link">詳細を見る →</a>
+            </div>
+        </div>
+
+        <section class="contact-section">
+            <h2 class="contact-title">LP掲載のお申し込み</h2>
+            <form id="contactForm">
+                <div class="form-group">
+                    <label for="companyName">企業名・サービス名 *</label>
+                    <input type="text" id="companyName" name="companyName" required>
+                </div>
+
+                <div class="form-group">
+                    <label for="category">カテゴリ *</label>
+                    <select id="category" name="category" required>
+                        <option value="">選択してください</option>
+                        <option value="health">健康管理</option>
+                        <option value="exercise">運動・フィットネス</option>
+                        <option value="food">栄養・食事</option>
+                        <option value="beauty">美容・スキンケア</option>
+                        <option value="mental">メンタルヘルス</option>
+                        <option value="lifestyle">ライフスタイル</option>
+                        <option value="medical">医療・治療</option>
+                    </select>
+                </div>
+
+                <div class="form-group">
+                    <label for="message">紹介メッセージ *</label>
+                    <textarea id="message" name="message" rows="4" placeholder="企業・サービスの魅力を簡潔にご紹介ください（100文字程度）" required></textarea>
+                </div>
+
+                <div class="form-group">
+                    <label for="lpUrl">LP・公式サイトURL *</label>
+                    <input type="url" id="lpUrl" name="lpUrl" placeholder="https://example.com" required>
+                </div>
+
+                <div class="form-group">
+                    <label for="contactName">担当者名 *</label>
+                    <input type="text" id="contactName" name="contactName" required>
+                </div>
+
+                <div class="form-group">
+                    <label for="email">メールアドレス *</label>
+                    <input type="email" id="email" name="email" required>
+                </div>
+
+                <div class="form-group">
+                    <label for="phone">電話番号</label>
+                    <input type="tel" id="phone" name="phone">
+                </div>
+
+                <div class="form-group">
+                    <label for="additionalInfo">その他ご要望</label>
+                    <textarea id="additionalInfo" name="additionalInfo" rows="3" placeholder="特別なご要望やご質問がございましたらご記入ください"></textarea>
+                </div>
+
+                <button type="submit" class="submit-btn">お申し込み送信（掲載料: 1,000円）</button>
+            </form>
+        </section>
+    </div>
+
+    <script defer src="https://cdn.jsdelivr.net/npm/@emailjs/browser@4/dist/email.min.js"></script>
+    <script defer src="app.js"></script>
+</body>
+</html>
