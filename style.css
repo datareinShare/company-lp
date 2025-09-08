@@ -167,23 +167,24 @@ mark { background: #fef08a; padding: 0 .15em; border-radius: .2em; }
 @media (max-width: 768px) {
     .container { padding: 10px; }
     h1 { font-size: 2rem; }
-    /* タブを横スクロールにして柔軟に表示 */
+    /* タブはスクロールせず、複数列の一覧で見やすく表示 */
     .category-tabs {
-        justify-content: flex-start;
-        flex-wrap: nowrap;
-        overflow-x: auto;
-        overflow-y: hidden;
-        white-space: nowrap;
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
         gap: 10px;
-        padding-top: 8px; /* 上方向のホバー分の逃げを確保 */
-        padding-bottom: 8px;
-        -webkit-overflow-scrolling: touch;
-        scroll-snap-type: x proximity;
+        justify-content: center;
+        align-items: stretch;
+        overflow: visible;
+        white-space: normal;
+        padding: 0;
     }
-    .category-tabs::-webkit-scrollbar { height: 6px; }
-    .category-tabs::-webkit-scrollbar-thumb { background-color: #fed7aa; border-radius: 4px; }
-    .category-tabs::-webkit-scrollbar-track { background: transparent; }
-    .tab-button { flex: 0 0 auto; scroll-snap-align: start; }
+    .tab-button {
+        width: 100%;
+        white-space: normal; /* ラベルの改行を許可 */
+        font-size: 0.95rem;
+        padding: 10px 12px;
+        transform: none; /* モバイルでの持ち上がりを抑制 */
+    }
     .companies-grid { grid-template-columns: 1fr; }
     .search-bar { grid-template-columns: 1fr; }
     .result-row { flex-direction: column; gap: 6px; align-items: flex-start; }
