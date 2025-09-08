@@ -38,8 +38,34 @@ h1 {
 .subtitle { color: #92400e; font-size: 1.1rem; }
 
 .category-tabs {
-    display: flex; justify-content: center; gap: 15px; margin: 25px 0 15px; flex-wrap: wrap;
+    display: flex; justify-content: center; gap: 15px; margin: 25px 0 15px; flex-wrap: wrap; position: relative;
 }
+/* タブのスクロールヒント（上部） */
+.tabs-hint { text-align: center; font-size: 0.95rem; color: #92400e; margin: 4px 0 6px; display: none; }
+.tabs-hint .arrows { display: inline-block; margin-left: 6px; opacity: .9; }
+.tabs-hint .arrows::before { content: "⇠⇢"; display: inline-block; animation: hintArw 1.6s ease-in-out infinite; }
+.tabs-hint.hidden { display: none; }
+@keyframes hintArw {
+    0%   { transform: translateX(0); opacity: .6; }
+    50%  { transform: translateX(6px); opacity: 1; }
+    100% { transform: translateX(0); opacity: .6; }
+}
+
+/* タブのシークバー（進捗バー） */
+.tabs-progress { position: relative; height: 4px; background: rgba(253, 215, 170, 0.5); border-radius: 4px; overflow: hidden; margin: 6px 0 6px; }
+.tabs-progress__bar { position: absolute; top: 0; left: 0; height: 100%; width: 0%; background: linear-gradient(90deg, #f97316, #ea580c); border-radius: 4px; transition: width .12s ease, transform .12s ease; }
+/* スクロールの端のグラデーション（モバイル向け。JSで表示制御） */
+.category-tabs::before,
+.category-tabs::after {
+    content: "";
+    position: absolute;
+    top: 0; bottom: 0;
+    width: 36px;
+    pointer-events: none;
+    display: none;
+}
+.category-tabs::before { left: 0; background: rgba(255,255,255,0.98); }
+.category-tabs::after  { right: 0; background: rgba(255,255,255,0.98); }
 
 .tab-button {
     background: rgba(255, 255, 255, 0.9);
@@ -167,24 +193,32 @@ mark { background: #fef08a; padding: 0 .15em; border-radius: .2em; }
 @media (max-width: 768px) {
     .container { padding: 10px; }
     h1 { font-size: 2rem; }
-    /* タブはスクロールせず、複数列の一覧で見やすく表示 */
+    /* タブは横スクロールで表示し、端のフェードで気づきやすく */
     .category-tabs {
-        display: grid;
-        grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+        justify-content: flex-start;
+        flex-wrap: nowrap;
+        overflow-x: auto;
+        overflow-y: hidden;
+        white-space: nowrap;
         gap: 10px;
-        justify-content: center;
-        align-items: stretch;
-        overflow: visible;
-        white-space: normal;
-        padding: 0;
+        padding: 8px 6px;
+        padding-right: 28px; /* 右端をあえて見切らせる余白（拡大） */
+        -webkit-overflow-scrolling: touch;
+        scroll-snap-type: x proximity;
     }
-    .tab-button {
-        width: 100%;
-        white-space: normal; /* ラベルの改行を許可 */
-        font-size: 0.95rem;
-        padding: 10px 12px;
-        transform: none; /* モバイルでの持ち上がりを抑制 */
-    }
+    .category-tabs::-webkit-scrollbar { height: 6px; }
+    .category-tabs::-webkit-scrollbar-thumb { background-color: #fed7aa; border-radius: 4px; }
+    .category-tabs::-webkit-scrollbar-track { background: transparent; }
+    .tab-button { flex: 0 0 auto; scroll-snap-align: start; }
+    /* フェードはクラス付与時のみ表示 */
+    .category-tabs::before { width: 16px; }
+    .category-tabs::after  { width: 28px; box-shadow: -1px 0 0 rgba(254, 215, 170, 0.7) inset; }
+    .category-tabs.show-left::before { display: block; }
+    .category-tabs.show-right::after { display: block; }
+    /* モバイルでもヒントとバーを上部に常時表示 */
+    .tabs-hint { display: block; }
+    .tabs-progress { display: block; }
+    .tabs-hint.hidden { display: none; }
     .companies-grid { grid-template-columns: 1fr; }
     .search-bar { grid-template-columns: 1fr; }
     .result-row { flex-direction: column; gap: 6px; align-items: flex-start; }

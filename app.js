@@ -55,6 +55,9 @@ function escapeRegExp(s){ return s.replace(/[.*+?^${}()|[\]\\]/g, '\\$&'); }
 // メイン処理
 document.addEventListener('DOMContentLoaded', function() {
   const tabButtons = document.querySelectorAll('.tab-button');
+  const tabsBar = document.querySelector('.category-tabs');
+  const tabsHint = document.querySelector('.tabs-hint');
+  const tabsProgressBar = document.querySelector('.tabs-progress__bar');
   const companiesGrid = document.getElementById('companiesGrid');
   const searchInput = document.getElementById('freeword');
   const clearBtn = document.getElementById('clearSearch');
@@ -295,3 +298,41 @@ document.addEventListener('DOMContentLoaded', function() {
 
   // 企業リンクはそのまま遷移（target=_blank）。特別なハンドラは不要。
 });
+  // タブのスクロール余白・フェード制御とヒントの非表示
+  function updateTabsUI(){
+    if (!tabsBar) return;
+    const max = Math.max(0, tabsBar.scrollWidth - tabsBar.clientWidth);
+    const hasOverflow = max > 1;
+    const left = hasOverflow && tabsBar.scrollLeft > 2;
+    const right = hasOverflow && tabsBar.scrollLeft < (max - 2);
+    tabsBar.classList.toggle('show-left', left);
+    tabsBar.classList.toggle('show-right', right);
+    // ヒントはオーバーフローなしなら非表示
+    if (!hasOverflow && tabsHint) tabsHint.classList.add('hidden');
+    // シークバー更新
+    if (tabsProgressBar) {
+      const visible = tabsBar.clientWidth;
+      const total = Math.max(visible, tabsBar.scrollWidth);
+      const ratioVisible = Math.min(1, visible / total);
+      const maxMove = 1 - ratioVisible;
+      const offset = max > 0 ? Math.min(1, tabsBar.scrollLeft / max) : 0;
+      tabsProgressBar.style.width = `${Math.max(0.08, ratioVisible) * 100}%`;
+      tabsProgressBar.style.transform = `translateX(${offset * maxMove * 100}%)`;
+    }
+  }
+
+  if (tabsBar) {
+    updateTabsUI();
+    tabsBar.addEventListener('scroll', () => {
+      updateTabsUI();
+      if (tabsHint && !tabsHint.classList.contains('hidden')) tabsHint.classList.add('hidden');
+    });
+    window.addEventListener('resize', updateTabsUI);
+    // タップ/クリックでもヒントを消す
+    ['pointerdown','keydown'].forEach(ev => {
+      tabsBar.addEventListener(ev, () => {
+        if (tabsHint && !tabsHint.classList.contains('hidden')) tabsHint.classList.add('hidden');
+        updateTabsUI();
+      }, { passive: true });
+    });
+  }
