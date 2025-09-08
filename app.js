@@ -1,26 +1,48 @@
 // ==== 送信先（GAS Webアプリ） ====
-const APP_CONFIG = window.APP_CONFIG || {};
-const GAS_ENDPOINT = (APP_CONFIG.GAS_ENDPOINT || '').trim();
+// 直書きで管理（GitHub Pages等でもそのまま動作）
+const GAS_ENDPOINT = 'https://script.google.com/macros/s/AKfycbxBVnwaQ4ue_qh0-dLw1tQyneVxfOk7E4FsnsQcXukkPuwkM8kpI9nsOdBfBhEm0UvLTw/exec';
 const GAS_LIST_ENDPOINT = GAS_ENDPOINT; // GET: 企業一覧, POST: 問い合わせ
 
 // カテゴリ→見た目クラスの対応（style.cssに準拠）
 const CATEGORY_TO_CLASS = {
-  '健康情報': 'health',
-  '食育情報': 'food',
-  '運動情報': 'exercise',
-  '美容情報': 'beauty',
-  '終活情報': 'end',
-  '財産管理情報': 'asset',
-  '保険・ファイナンシャルプランナー情報': 'finance',
-  '不動産情報': 'estate',
-  '弁護士情報': 'legal',
-  '司法書士情報': 'judge',
-  '社労士情報': 'consultant',
+  // 新ラベル
+  '健康': 'health',
+  '食育': 'food',
+  '運動': 'exercise',
+  '美容': 'beauty',
+  '終活': 'end',
+  '財産管理': 'asset',
+  '保険・ファイナンシャルプランナー': 'finance',
+  '不動産': 'estate',
+  '弁護士': 'legal',
+  '司法書士': 'judge',
+  '社労士': 'consultant',
   'メンタルヘルス': 'mental',
-  '防犯情報': 'prevention',
-  '旅行・観光情報': 'travel',
+  '防犯': 'prevention',
+  '旅行・観光': 'travel',
   'その他': 'others'
 };
+
+// 旧→新カテゴリ名の正規化（スプレッドシートが旧表記でも動くように）
+function normalizeCategoryName(cat){
+  const m = {
+    '健康情報': '健康',
+    '食育情報': '食育',
+    '運動情報': '運動',
+    '美容情報': '美容',
+    '終活情報': '終活',
+    '財産管理情報': '財産管理',
+    '保険・ファイナンシャルプランナー情報': '保険・ファイナンシャルプランナー',
+    '不動産情報': '不動産',
+    '弁護士情報': '弁護士',
+    '司法書士情報': '司法書士',
+    '社労士情報': '社労士',
+    '防犯情報': '防犯',
+    '旅行・観光情報': '旅行・観光'
+  };
+  const c = String(cat || '').trim();
+  return m[c] || c;
+}
 
 // ユーティリティ: デバウンス
 function debounce(fn, delay = 200) {
@@ -43,14 +65,18 @@ document.addEventListener('DOMContentLoaded', function() {
   let activeCategory = 'all';
 
   // カード描画
-  function mapCategoryToClass(cat){ return CATEGORY_TO_CLASS[cat] || 'others'; }
+  function mapCategoryToClass(cat){
+    const norm = normalizeCategoryName(cat);
+    return CATEGORY_TO_CLASS[norm] || 'others';
+  }
 
   function createCompanyCard(item){
     const styleClass = (item.styleClass && String(item.styleClass).trim()) || mapCategoryToClass(item.category);
     const url = (item.url && String(item.url).trim()) || '#';
     const card = document.createElement('div');
     card.className = `company-card ${styleClass}`;
-    card.setAttribute('data-category', item.category || 'その他');
+    const normalized = normalizeCategoryName(item.category || '');
+    card.setAttribute('data-category', normalized || 'その他');
     card.innerHTML = `
       <h3 class="company-name"></h3>
       <p class="company-message"></p>
@@ -74,11 +100,6 @@ document.addEventListener('DOMContentLoaded', function() {
   }
 
   async function loadCompanies(){
-    if (!GAS_LIST_ENDPOINT) {
-      companiesGrid.innerHTML = '<p>設定が未完了です。config.js に GAS_ENDPOINT を設定してください。</p>';
-      resultCount.textContent = '';
-      return;
-    }
     // まずは通常のfetch（CORS許可環境で成功）
     try {
       const res = await fetch(`${GAS_LIST_ENDPOINT}?activeOnly=true`, { method: 'GET' });
@@ -202,8 +223,10 @@ document.addEventListener('DOMContentLoaded', function() {
   // クリアボタン
   if (clearBtn) clearBtn.addEventListener('click', () => { searchInput.value = ''; applyFilters(); searchInput.focus(); });
 
-  // 初期表示（企業一覧を取得してからフィルタ適用）
-  loadCompanies();
+  // 初期表示（企業一覧は companiesGrid があるページのみ読み込み）
+  if (companiesGrid) {
+    loadCompanies();
+  }
 
   // フォーム送信処理（GAS WebアプリへPOST）
   const contactForm = document.getElementById('contactForm');

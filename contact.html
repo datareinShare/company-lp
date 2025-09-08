@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>LP掲載のお申し込み</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <div class="container">
+    <header>
+      <h1>LP掲載のお申し込み</h1>
+      <p class="subtitle">必要事項をご入力のうえ送信してください</p>
+    </header>
+
+    <section class="contact-section">
+      <form id="contactForm">
+        <div class="form-group">
+          <label for="companyName">企業名・サービス名 *</label>
+          <input type="text" id="companyName" name="companyName" required>
+        </div>
+
+        <div class="form-group">
+          <label for="category">カテゴリ *</label>
+          <select id="category" name="category" required>
+            <option value="">選択してください</option>
+            <option value="健康">健康</option>
+            <option value="食育">食育</option>
+            <option value="運動">運動</option>
+            <option value="美容">美容</option>
+            <option value="終活">終活</option>
+            <option value="財産管理">財産管理</option>
+            <option value="保険・ファイナンシャルプランナー">保険・ファイナンシャルプランナー</option>
+            <option value="不動産">不動産</option>
+            <option value="弁護士">弁護士</option>
+            <option value="司法書士">司法書士</option>
+            <option value="社労士">社労士</option>
+            <option value="メンタルヘルス">メンタルヘルス</option>
+            <option value="防犯">防犯</option>
+            <option value="旅行・観光">旅行・観光</option>
+            <option value="その他">その他</option>
+          </select>
+        </div>
+
+        <div class="form-group">
+          <label for="message">紹介メッセージ *</label>
+          <textarea id="message" name="message" rows="4" placeholder="企業・サービスの魅力を簡潔にご紹介ください（100文字程度）" required></textarea>
+        </div>
+
+        <div class="form-group">
+          <label for="lpUrl">LP・公式サイトURL *</label>
+          <input type="url" id="lpUrl" name="lpUrl" placeholder="https://example.com" required>
+        </div>
+
+        <div class="form-group">
+          <label for="contactName">担当者名 *</label>
+          <input type="text" id="contactName" name="contactName" required>
+        </div>
+
+        <div class="form-group">
+          <label for="email">メールアドレス *</label>
+          <input type="email" id="email" name="email" required>
+        </div>
+
+        <div class="form-group">
+          <label for="phone">電話番号</label>
+          <input type="tel" id="phone" name="phone">
+        </div>
+
+        <div class="form-group">
+          <label for="additionalInfo">その他ご要望</label>
+          <textarea id="additionalInfo" name="additionalInfo" rows="3" placeholder="特別なご要望やご質問がございましたらご記入ください"></textarea>
+        </div>
+
+        <button type="submit" class="submit-btn">お申し込み送信（掲載料: 月額1,000円）</button>
+        <p id="formStatus" class="form-status" role="status" aria-live="polite"></p>
+      </form>
+    </section>
+
+    <p style="margin-top:16px;"><a href="index.html" class="company-link">← トップへ戻る</a></p>
+  </div>
+
+  <script defer src="app.js"></script>
+</body>
+</html>
